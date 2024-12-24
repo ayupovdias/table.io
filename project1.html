@@ -1,0 +1,235 @@
+<html>
+<head>
+  <title>Interactive Data Table</title>
+  <style>
+    body{
+      font-family:sans-serif;
+      font-size:20px;
+    }
+    #mainDiv{
+
+      width:60%;
+      margin:0 auto;
+
+    }
+    h1{
+      text-align:center;
+      margin-top:20px;
+    }
+    input{
+      text-align:center;
+      height:25px;
+      width:250px;
+    }
+    #input{
+
+      width:250px;
+      margin:0 auto 25px;
+
+    }
+    table{
+      border:1px solid black;
+      border-collapse:collapse;
+      font-size:20px;
+    }
+    td{
+      border:1px solid black;
+      background-color:whitesmoke;
+      text-align:center;
+    }
+    th{
+      border:1px solid black;
+      background-color:lightgray;
+    }
+    #table{
+
+      margin:0 auto;
+      width:472px;
+    }
+  </style>
+</head>
+<body>
+<div id="mainDiv">
+  <h1> Interactive Data Table</h1>
+  <div id="input">
+    <input id="i" oninput="searchFor()" placeholder="Search">
+  </div>
+  <div id="table" data-sort-dir="asc">
+    <table id='t' cellpadding="15px">
+      <tr>
+        <th onclick="sortTable(0)">Id</th>
+        <th onclick="sortTable(1)">Name</th>
+        <th onclick="sortTable(2)">Surname</th>
+        <th onclick="sortTable(3)">Age</th>
+        <th onclick="sortTable(4)">Position</th>
+      </tr>
+
+    </table>
+  </div>
+</div>
+<script>
+  let table = document.getElementById("t");
+  let data = [{
+    id: 1,
+    name: "Dias",
+    surname: "Ayupov",
+    age: 19,
+    position: 'student'
+  },
+    {
+      id: 2,
+      name: "Nurtas",
+      surname: "Bayjanov",
+      age: 19,
+      position: 'student'
+    },
+    {
+      id: 3,
+      name: 'Yelaman',
+      surname: 'Kassenov',
+      age: 19,
+      position: 'student'
+    },
+    {
+      id: 4,
+      name: "Damir",
+      surname: "Zautbek",
+      age: 12,
+      position: "schoolboy"
+    },
+    {
+      id: 5,
+      name: 'Alisa',
+      surname: "Zautbek",
+      age: 13,
+      position: 'schoolgirl'
+    },
+    {
+      id:6,
+      name:'Bob',
+      surname:'Johnson',
+      age:28,
+      position: "Software Engineer"
+    },
+    {
+      id:7,
+      name:'Carel',
+      surname:'Williams',
+      age:45,
+      position:'Project Manager'
+    },
+    {
+      id:8,
+      name:'Grace',
+      surname:'Rodriguez',
+      age:29,
+      position:"Sales Manager"
+    },
+    {
+      id:9,
+      name:"Olivia",
+      surname:"Martin",
+      age:55,
+      position:"CEO"
+    },
+    {
+      id:10,
+      name:"Liam",
+      surname:"White",
+      age:24,
+      position:"System Administrator"
+    },
+    {
+      id:11,
+      name:"David",
+      surname:"Brown",
+      age:31,
+      position:"Graphic Designer"
+    },
+    {
+      id:12,
+      name:"Henry",
+      surname:'Martinez',
+      age:"41",
+      position:'Data Analyst'
+    }];
+  for (let i of data) {
+    let row = `<tr>
+
+
+
+
+<td>${i.id}</td>
+<td>${i.name}</td>
+<td>${i.surname}</td>
+<td>${i.age}</td>
+<td>${i.position}</td>
+</tr>`;
+    t.innerHTML += row;
+  }
+
+  function searchFor() {
+    let input = document.getElementById("i").value.toLowerCase();
+    let rows = document.querySelectorAll("#t tr");
+
+    for (let i = 1; i < rows.length; i++) {
+      let cells = rows[i].querySelectorAll("td");
+      let display = false;
+
+      for (let cell of cells) {
+        if (cell.textContent.toLowerCase().includes(input)) {
+          display = true;
+          break;
+        }
+      }
+
+      if (display === false) {
+        rows[i].style.display = 'none';
+      } else {
+        rows[i].style.display = 'table-row';
+      }
+    }
+  }
+
+  function sortTable(columnIndex) {
+    let rows = Array.from(table.rows).slice(1);
+    let asc = table.getAttribute("data-sort-dir") === "asc";
+    rows.sort(function(a, b) {
+      let aText = a.cells[columnIndex].textContent.trim();
+      let bText = b.cells[columnIndex].textContent.trim();
+      if (!isNaN(aText) && !isNaN(bText)) {
+        if(asc){
+          return aText-bText;
+        }
+        else{
+          return bText-aText;
+        }
+      }
+      if(asc){
+        if(aText<bText) return -1;
+        if(aText>bText) return 1;
+        return 0;
+      }
+      else{
+        if(aText<bText) return 1;
+        if(aText>bText) return -1
+        return 0;
+      }
+
+    });
+    rows.forEach(function(row) {
+      table.appendChild(row);
+    });
+
+    if(asc){
+      table.setAttribute("data-sort-dir","desc");
+    }
+    else{
+      table.setAttribute("data-sort-dir","asc");
+    }
+  }
+
+
+</script>
+</body>
+</html>
